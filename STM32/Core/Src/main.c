@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "SystemTimer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -129,8 +129,26 @@ HAL_TIM_Base_Start_IT(&htim2);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+setTimer1(50);
+int state = 1;
   while (1)
   {
+	  if(timer1Flag == 1){
+		  setTimer1(50);
+		  HAL_GPIO_WritePin(GPIOA, En1_Pin | En2_Pin, 1);
+		  switch (state) {
+			case 1:
+				HAL_GPIO_WritePin(GPIOA, En1_Pin, 0);
+				display7SEG(1);
+				state = 2;
+				break;
+			default:
+				HAL_GPIO_WritePin(GPIOA, En2_Pin, 0);
+				display7SEG(2);
+				state = 1;
+				break;
+		}
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -260,19 +278,20 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-int count = 100;
+//int count = 100;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-	if (count <= 0) count = 100;
-	if (count >= 50){
-		HAL_GPIO_WritePin(GPIOA, En1_Pin, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOA, En2_Pin, GPIO_PIN_SET);
-		display7SEG(1);
-	} else {
-		HAL_GPIO_WritePin(GPIOA, En1_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(GPIOA, En2_Pin, GPIO_PIN_RESET);
-		display7SEG(2);
-	}
-	count--;
+//	if (count <= 0) count = 100;
+//	if (count >= 50){
+//		HAL_GPIO_WritePin(GPIOA, En1_Pin, GPIO_PIN_RESET);
+//		HAL_GPIO_WritePin(GPIOA, En2_Pin, GPIO_PIN_SET);
+//		display7SEG(1);
+//	} else {
+//		HAL_GPIO_WritePin(GPIOA, En1_Pin, GPIO_PIN_SET);
+//		HAL_GPIO_WritePin(GPIOA, En2_Pin, GPIO_PIN_RESET);
+//		display7SEG(2);
+//	}
+//	count--;
+	timerRun();
  }
 /* USER CODE END 4 */
 
