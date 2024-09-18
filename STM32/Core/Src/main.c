@@ -92,6 +92,33 @@ void display7SEG(int num){
 			break;
 	}
 }
+const int MAX_LED = 4;
+int index_led = 0;
+int led_buffer[4] = {1, 2, 3, 4};
+void update7SEG(int index){
+	HAL_GPIO_WritePin(GPIOA, En1_Pin | En2_Pin | En3_Pin | En4_Pin, 1);
+	switch (index) {
+		case 0:
+			HAL_GPIO_WritePin(GPIOA, En1_Pin, 0);
+			display7SEG(led_buffer[index]);
+			break;
+		case 1:
+			HAL_GPIO_WritePin(GPIOA, En2_Pin, 0);
+			display7SEG(led_buffer[index]);
+			break;
+		case 2:
+			HAL_GPIO_WritePin(GPIOA, En3_Pin, 0);
+			display7SEG(led_buffer[index]);
+			break;
+		case 3:
+			HAL_GPIO_WritePin(GPIOA, En4_Pin, 0);
+			display7SEG(led_buffer[index]);
+			break;
+		default:
+			break;
+	}
+	if (index_led >= 4) index_led = 0;
+}
 /* USER CODE END 0 */
 
 /**
@@ -140,29 +167,30 @@ HAL_TIM_Base_Start_IT(&htim2);
 	  }
 	  if (timer2Flag == 1){
 		  setTimer2(50);
-		  HAL_GPIO_WritePin(GPIOA, En1_Pin | En2_Pin | En3_Pin | En4_Pin, 1);
-		  switch (state) {
-			case 1:
-				HAL_GPIO_WritePin(GPIOA, En1_Pin, 0);
-				display7SEG(1);
-				state = 2;
-				break;
-			case 2:
-				HAL_GPIO_WritePin(GPIOA, En2_Pin, 0);
-				display7SEG(2);
-				state = 3;
-				break;
-			case 3:
-				HAL_GPIO_WritePin(GPIOA, En3_Pin, 0);
-				display7SEG(3);
-				state = 4;
-				break;
-			default:
-				HAL_GPIO_WritePin(GPIOA, En4_Pin, 0);
-				display7SEG(0);
-				state = 1;
-				break;
-		}
+		  update7SEG(index_led++);
+//		  HAL_GPIO_WritePin(GPIOA, En1_Pin | En2_Pin | En3_Pin | En4_Pin, 1);
+//		  switch (state) {
+//			case 1:
+//				HAL_GPIO_WritePin(GPIOA, En1_Pin, 0);
+//				display7SEG(1);
+//				state = 2;
+//				break;
+//			case 2:
+//				HAL_GPIO_WritePin(GPIOA, En2_Pin, 0);
+//				display7SEG(2);
+//				state = 3;
+//				break;
+//			case 3:
+//				HAL_GPIO_WritePin(GPIOA, En3_Pin, 0);
+//				display7SEG(3);
+//				state = 4;
+//				break;
+//			default:
+//				HAL_GPIO_WritePin(GPIOA, En4_Pin, 0);
+//				display7SEG(0);
+//				state = 1;
+//				break;
+//		}
 	  }
 
     /* USER CODE END WHILE */
