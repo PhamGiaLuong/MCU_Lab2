@@ -1,0 +1,3 @@
+SystemTimer.c:15:6:setTimer1	16	static
+SystemTimer.c:20:6:setTimer2	16	static
+SystemTimer.c:25:6:timerRun	4	static
