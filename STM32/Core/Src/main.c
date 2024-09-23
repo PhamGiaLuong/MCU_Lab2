@@ -94,7 +94,7 @@ void display7SEG(int num){
 }
 const int MAX_LED = 4;
 int index_led = 0;
-int led_buffer[4] = {1, 2, 3, 4};
+int led_buffer[4] = {1, 5, 0, 8};
 int hour = 15, minute = 8, second = 50;
 void update7SEG(int index){
 	HAL_GPIO_WritePin(GPIOA, En1_Pin | En2_Pin | En3_Pin | En4_Pin, 1);
@@ -172,22 +172,47 @@ HAL_TIM_Base_Start_IT(&htim2);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+setTimer1(75);
+setTimer2(50);
   while (1)
   {
-	  second++;
-	  if (second >= 60){
-		  second = 0;
-		  minute++;
-	  }
-	  if (minute >= 60){
-		  minute = 0;
-		  hour++;
-	  }
-	  if (hour >= 24){
-		  hour = 0;
-	  }
-	  updateClockBuffer();
+//	  second++;
+//	  if (second >= 60){
+//		  second = 0;
+//		  minute++;
+//	  }
+//	  if (minute >= 60){
+//		  minute = 0;
+//		  hour++;
+//	  }
+//	  if (hour >= 24){
+//		  hour = 0;
+//	  }
+//	  updateClockBuffer();
 //	  HAL_Delay(1000);
+	  if (timer1Flag == 1){
+		  setTimer1(100);
+		  HAL_GPIO_TogglePin(GPIOA, DOT_Pin);
+	  }
+	  if (timer2Flag == 1){
+		  setTimer2(25);
+		  update7SEG(index_led++);
+
+		  second++;
+		  if (second >= 60){
+			  second = 0;
+			  minute++;
+		  }
+		  if (minute >= 60){
+			  minute = 0;
+			  hour++;
+		  }
+		  if (hour >= 24){
+			  hour = 0;
+		  }
+		  updateClockBuffer();
+	  }
+
 
     /* USER CODE END WHILE */
 
