@@ -95,6 +95,7 @@ void display7SEG(int num){
 const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer[4] = {1, 2, 3, 4};
+int hour = 15, minute = 8, second = 50;
 void update7SEG(int index){
 	HAL_GPIO_WritePin(GPIOA, En1_Pin | En2_Pin | En3_Pin | En4_Pin, 1);
 	switch (index) {
@@ -118,6 +119,21 @@ void update7SEG(int index){
 			break;
 	}
 	if (index_led >= 4) index_led = 0;
+}
+
+void updateClockBuffer(){
+	if (hour >= 10){
+		led_buffer[0] = hour/10;
+	} else {
+		led_buffer[0] = 0;
+	}
+	led_buffer[1] = hour%10;
+	if (minute >= 10){
+		led_buffer[2] = minute/10;
+	} else {
+		led_buffer[2] = 0;
+	}
+	led_buffer[3] = minute%10;
 }
 /* USER CODE END 0 */
 
@@ -156,42 +172,22 @@ HAL_TIM_Base_Start_IT(&htim2);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	setTimer1(100);
-	setTimer2(50);
-	int state = 1;
   while (1)
   {
-	  if (timer1Flag == 1){
-		  setTimer1(100);
-		  HAL_GPIO_TogglePin(GPIOA, DOT_Pin);
+	  second++;
+	  if (second >= 60){
+		  second = 0;
+		  minute++;
 	  }
-	  if (timer2Flag == 1){
-		  setTimer2(50);
-		  update7SEG(index_led++);
-//		  HAL_GPIO_WritePin(GPIOA, En1_Pin | En2_Pin | En3_Pin | En4_Pin, 1);
-//		  switch (state) {
-//			case 1:
-//				HAL_GPIO_WritePin(GPIOA, En1_Pin, 0);
-//				display7SEG(1);
-//				state = 2;
-//				break;
-//			case 2:
-//				HAL_GPIO_WritePin(GPIOA, En2_Pin, 0);
-//				display7SEG(2);
-//				state = 3;
-//				break;
-//			case 3:
-//				HAL_GPIO_WritePin(GPIOA, En3_Pin, 0);
-//				display7SEG(3);
-//				state = 4;
-//				break;
-//			default:
-//				HAL_GPIO_WritePin(GPIOA, En4_Pin, 0);
-//				display7SEG(0);
-//				state = 1;
-//				break;
-//		}
+	  if (minute >= 60){
+		  minute = 0;
+		  hour++;
 	  }
+	  if (hour >= 24){
+		  hour = 0;
+	  }
+	  updateClockBuffer();
+//	  HAL_Delay(1000);
 
     /* USER CODE END WHILE */
 
@@ -322,19 +318,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-//int count = 100;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-//	if (count <= 0) count = 100;
-//	if (count >= 50){
-//		HAL_GPIO_WritePin(GPIOA, En1_Pin, GPIO_PIN_RESET);
-//		HAL_GPIO_WritePin(GPIOA, En2_Pin, GPIO_PIN_SET);
-//		display7SEG(1);
-//	} else {
-//		HAL_GPIO_WritePin(GPIOA, En1_Pin, GPIO_PIN_SET);
-//		HAL_GPIO_WritePin(GPIOA, En2_Pin, GPIO_PIN_RESET);
-//		display7SEG(2);
-//	}
-//	count--;
 	timerRun();
  }
 /* USER CODE END 4 */
