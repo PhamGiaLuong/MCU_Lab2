@@ -195,6 +195,8 @@ setTimer2(50);
 			  hour = 0;
 		  }
 		  updateClockBuffer();
+
+		  update7SEG(index_led++);
 	  }
 
 
