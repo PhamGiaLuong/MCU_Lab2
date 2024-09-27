@@ -118,7 +118,7 @@ void update7SEG(int index){
 		default:
 			break;
 	}
-	if (index_led >= 4) index_led = 0;
+	if (index_led >= MAX_LED) index_led = 0;
 }
 
 void updateClockBuffer(){
@@ -173,7 +173,7 @@ HAL_TIM_Base_Start_IT(&htim2);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 setTimer1(75);
-setTimer2(50);
+setTimer2(40);
   while (1)
   {
 	  if (timer1Flag == 1){
@@ -195,6 +195,7 @@ setTimer2(50);
 			  hour = 0;
 		  }
 		  updateClockBuffer();
+		  update7SEG(index_led++);
 	  }
 
 
