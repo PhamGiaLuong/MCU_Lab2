@@ -8,12 +8,9 @@
 #ifndef INC_SYSTEMTIMER_H_
 #define INC_SYSTEMTIMER_H_
 
-extern int timer1Flag;
-extern int timer2Flag;
-
-void setTimer1(int duration);
-void setTimer2(int duration);
-
+void initTimer();
+int isTimerFlagOn(int index);
+void setTimer(int index, int duration);
 void timerRun();
 
 #endif /* INC_SYSTEMTIMER_H_ */

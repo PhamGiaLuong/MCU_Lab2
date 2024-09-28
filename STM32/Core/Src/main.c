@@ -139,41 +139,74 @@ void updateClockBuffer(){
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
 uint8_t matrix_buffer[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
-void updateLEDMatrix (int index){
-	HAL_GPIO_WritePin(GPIOB, ROW1_Pin | ROW2_Pin | ROW3_Pin | ROW4_Pin |
-			 	 	 	 	 ROW5_Pin | ROW6_Pin | ROW7_Pin | ROW0_Pin | ENM6_Pin, 0);
+//void updateLEDMatrix (int index){
+//	HAL_GPIO_WritePin(GPIOB, ENM6_Pin, 1);
 //	HAL_GPIO_WritePin(GPIOA, ENM0_Pin | ENM1_Pin | ENM2_Pin | ENM3_Pin |
 //			 	 	 	 	 ENM4_Pin | ENM5_Pin | ENM7_Pin, 1);
-	switch (index) {
-		case 0:
-			HAL_GPIO_TogglePin(GPIOB, ROW0_Pin);
-			break;
-		case 1:
-			HAL_GPIO_TogglePin(GPIOB, ROW1_Pin);
-			break;
-		case 2:
-			HAL_GPIO_TogglePin(GPIOB, ROW2_Pin);
-			break;
-		case 3:
-			HAL_GPIO_TogglePin(GPIOB, ROW3_Pin);
-			break;
-		case 4:
-			HAL_GPIO_TogglePin(GPIOB, ROW4_Pin);
-			break;
-		case 5:
-			HAL_GPIO_TogglePin(GPIOB, ROW5_Pin);
-			break;
-		case 6:
-			HAL_GPIO_TogglePin(GPIOB, ROW6_Pin);
-			break;
-		case 7:
-			HAL_GPIO_TogglePin(GPIOB, ROW7_Pin);
-			break;
-		default:
-			break;
-	}
-	HAL_GPIO_WritePin(GPIOA, ENM0_Pin, (matrix_buffer[index] & (1 << index)) ? 0 : 1);
-	if (index_led_matrix >= MAX_LED_MATRIX) index_led_matrix = 0;
+//	HAL_GPIO_WritePin(GPIOB, ROW0_Pin | ROW1_Pin | ROW2_Pin | ROW3_Pin |
+//					ROW4_Pin | ROW5_Pin | ROW6_Pin | ROW7_Pin, 0);
+//	switch (index) {
+//		case 0:
+//			HAL_GPIO_WritePin(GPIOA, ENM0_Pin, 0);
+//			break;
+//		case 1:
+//			HAL_GPIO_WritePin(GPIOA, ENM1_Pin, 0);
+//			break;
+//		case 2:
+//			HAL_GPIO_WritePin(GPIOA, ENM2_Pin, 0);
+//			break;
+//		case 3:
+//			HAL_GPIO_WritePin(GPIOA, ENM3_Pin, 0);
+//			break;
+//		case 4:
+//			HAL_GPIO_WritePin(GPIOA, ENM4_Pin, 0);
+//			break;
+//		case 5:
+//			HAL_GPIO_WritePin(GPIOA, ENM5_Pin, 0);
+//			break;
+//		case 6:
+//			HAL_GPIO_WritePin(GPIOB, ENM6_Pin, 0);
+//			break;
+//		case 7:
+//			HAL_GPIO_WritePin(GPIOA, ENM7_Pin, 0);
+//			break;
+//		default:
+//			break;
+//	}
+//	HAL_GPIO_WritePin(GPIOB, ROW0_Pin | ROW1_Pin | ROW2_Pin | ROW3_Pin |
+//					ROW4_Pin | ROW5_Pin | ROW6_Pin | ROW7_Pin,
+//					(matrix_buffer[index] & (1 << index)) ? 1 : 0);
+//	if (index_led_matrix >= MAX_LED_MATRIX) index_led_matrix = 0;
+//}
+void updateLEDMatrix(int index) {
+    // Tắt tất cả các cột và bật tất cả hàng
+    HAL_GPIO_WritePin(GPIOB, ENM6_Pin, 1);
+    HAL_GPIO_WritePin(GPIOA, ENM0_Pin | ENM1_Pin | ENM2_Pin | ENM3_Pin |
+                      ENM4_Pin | ENM5_Pin | ENM7_Pin, 1);
+    HAL_GPIO_WritePin(GPIOB, ROW0_Pin | ROW1_Pin | ROW2_Pin | ROW3_Pin |
+                      ROW4_Pin | ROW5_Pin | ROW6_Pin | ROW7_Pin, 1);
+
+    // Bật cột LED tương ứng
+    switch (index) {
+        case 0: HAL_GPIO_WritePin(GPIOA, ENM0_Pin, 0); break;
+        case 1: HAL_GPIO_WritePin(GPIOA, ENM1_Pin, 0); break;
+        case 2: HAL_GPIO_WritePin(GPIOA, ENM2_Pin, 0); break;
+        case 3: HAL_GPIO_WritePin(GPIOA, ENM3_Pin, 0); break;
+        case 4: HAL_GPIO_WritePin(GPIOA, ENM4_Pin, 0); break;
+        case 5: HAL_GPIO_WritePin(GPIOA, ENM5_Pin, 0); break;
+        case 6: HAL_GPIO_WritePin(GPIOB, ENM6_Pin, 0); break;
+        case 7: HAL_GPIO_WritePin(GPIOA, ENM7_Pin, 0); break;
+        default: break; // Không làm gì nếu chỉ số không hợp lệ
+    }
+
+    // Cập nhật trạng thái của hàng LED
+    for (int row = 0; row < 8; row++) {
+        HAL_GPIO_WritePin(GPIOB, (1 << row), (matrix_buffer[index] & (1 << row)) ? GPIO_PIN_RESET : GPIO_PIN_SET);
+    }
+
+    // Cập nhật chỉ số LED ma trận
+    index_led_matrix++;
+    if (index_led_matrix >= MAX_LED_MATRIX) index_led_matrix = 0;
 }
 /* USER CODE END 0 */
 
@@ -212,17 +245,17 @@ HAL_TIM_Base_Start_IT(&htim2);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-setTimer1(75);
-setTimer2(50);
+initTimer();
+setTimer(1, 75);
+setTimer(2, 50);
   while (1)
   {
-	  if (timer1Flag == 1){
-		  setTimer1(100);
+	  if (isTimerFlagOn(1) == 1){
+		  setTimer(1, 100);
 		  HAL_GPIO_TogglePin(GPIOA, DOT_Pin);
-		  updateLEDMatrix(index_led_matrix++);
 	  }
-	  if (timer2Flag == 1){
-		  setTimer2(25);
+	  if (isTimerFlagOn(2) == 1){
+		  setTimer(2, 25);
 		  second++;
 		  if (second >= 60){
 			  second = 0;
@@ -236,7 +269,7 @@ setTimer2(50);
 			  hour = 0;
 		  }
 		  updateClockBuffer();
-
+		  updateLEDMatrix(index_led_matrix++);
 		  update7SEG(index_led++);
 	  }
 
