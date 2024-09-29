@@ -140,6 +140,11 @@ const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
 uint8_t matrix_buffer[8] = {0x18, 0x3c, 0x66, 0x66, 0x7e, 0x7e, 0x66, 0x66};
 int select = 7;
+int animation(int index){
+	index = select - index;
+	if (index < 0) index += 8;
+	return index;
+}
 void updateLEDMatrix (int index){
 	HAL_GPIO_WritePin(GPIOB, ENM6_Pin, 1);
 	HAL_GPIO_WritePin(GPIOA, ENM0_Pin | ENM1_Pin | ENM2_Pin | ENM3_Pin |
@@ -174,14 +179,14 @@ void updateLEDMatrix (int index){
 		default:
 			break;
 	}
-	HAL_GPIO_WritePin(GPIOB, ROW0_Pin, (matrix_buffer[0] & (1 << (select-index))) ? 0 : 1);
-	HAL_GPIO_WritePin(GPIOB, ROW1_Pin, (matrix_buffer[1] & (1 << (select-index))) ? 0 : 1);
-	HAL_GPIO_WritePin(GPIOB, ROW2_Pin, (matrix_buffer[2] & (1 << (select-index))) ? 0 : 1);
-	HAL_GPIO_WritePin(GPIOB, ROW3_Pin, (matrix_buffer[3] & (1 << (select-index))) ? 0 : 1);
-	HAL_GPIO_WritePin(GPIOB, ROW4_Pin, (matrix_buffer[4] & (1 << (select-index))) ? 0 : 1);
-	HAL_GPIO_WritePin(GPIOB, ROW5_Pin, (matrix_buffer[5] & (1 << (select-index))) ? 0 : 1);
-	HAL_GPIO_WritePin(GPIOB, ROW6_Pin, (matrix_buffer[6] & (1 << (select-index))) ? 0 : 1);
-	HAL_GPIO_WritePin(GPIOB, ROW7_Pin, (matrix_buffer[7] & (1 << (select-index))) ? 0 : 1);
+	HAL_GPIO_WritePin(GPIOB, ROW0_Pin, (matrix_buffer[0] & (1 << animation(index))) ? 0 : 1);
+	HAL_GPIO_WritePin(GPIOB, ROW1_Pin, (matrix_buffer[1] & (1 << animation(index))) ? 0 : 1);
+	HAL_GPIO_WritePin(GPIOB, ROW2_Pin, (matrix_buffer[2] & (1 << animation(index))) ? 0 : 1);
+	HAL_GPIO_WritePin(GPIOB, ROW3_Pin, (matrix_buffer[3] & (1 << animation(index))) ? 0 : 1);
+	HAL_GPIO_WritePin(GPIOB, ROW4_Pin, (matrix_buffer[4] & (1 << animation(index))) ? 0 : 1);
+	HAL_GPIO_WritePin(GPIOB, ROW5_Pin, (matrix_buffer[5] & (1 << animation(index))) ? 0 : 1);
+	HAL_GPIO_WritePin(GPIOB, ROW6_Pin, (matrix_buffer[6] & (1 << animation(index))) ? 0 : 1);
+	HAL_GPIO_WritePin(GPIOB, ROW7_Pin, (matrix_buffer[7] & (1 << animation(index))) ? 0 : 1);
 	if (index_led_matrix >= MAX_LED_MATRIX) index_led_matrix = 0;
 }
 /* USER CODE END 0 */
@@ -225,6 +230,7 @@ initTimer();
 setTimer(1, 77);
 setTimer(2, 55);
 setTimer(3, 66);
+setTimer(4, 66);
   while (1)
   {
 	  if (isTimerFlagOn(1) == 1){
@@ -251,6 +257,11 @@ setTimer(3, 66);
 	  if (isTimerFlagOn(3) == 1){
 		  setTimer(3, 1);
 		  updateLEDMatrix(index_led_matrix++);
+	  }
+	  if (isTimerFlagOn(4) == 1){
+		  setTimer(4, 8);
+		  select--;
+		  if (select < 0) select = 7;
 	  }
 
 

@@ -145,4 +145,10 @@ void timerRun(){
 			flag[2] = 1;
 		}
 	}
+	if (timerCounter[3] > 0){
+		timerCounter[3]--;
+		if (timerCounter[3] <= 0){
+			flag[3] = 1;
+		}
+	}
 }
