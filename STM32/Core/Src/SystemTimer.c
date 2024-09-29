@@ -9,7 +9,7 @@
 #define MAX_TIMERS 10
 
 int flag[MAX_TIMERS] = {0};
-int counter = 1000;
+int counter = 10000;
 
 //*************** Start implementation of Priority Queue ***************
 typedef struct{

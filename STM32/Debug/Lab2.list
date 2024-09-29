@@ -925,8 +925,8 @@ setTimer(1, 75);
  80006c2:	214b      	movs	r1, #75	; 0x4b
  80006c4:	2001      	movs	r0, #1
  80006c6:	f7ff fe87 	bl	80003d8 <setTimer>
-setTimer(2, 50);
- 80006ca:	2132      	movs	r1, #50	; 0x32
+setTimer(2, 40);
+ 80006ca:	2128      	movs	r1, #40	; 0x28
  80006cc:	2002      	movs	r0, #2
  80006ce:	f7ff fe83 	bl	80003d8 <setTimer>
   while (1)

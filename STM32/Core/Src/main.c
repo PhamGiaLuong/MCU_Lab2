@@ -174,7 +174,7 @@ HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE BEGIN WHILE */
 initTimer();
 setTimer(1, 75);
-setTimer(2, 50);
+setTimer(2, 40);
   while (1)
   {
 	  if (isTimerFlagOn(1) == 1){
