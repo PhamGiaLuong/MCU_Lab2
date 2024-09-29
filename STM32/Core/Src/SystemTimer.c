@@ -9,6 +9,7 @@
 #define MAX_TIMERS 10
 
 int flag[MAX_TIMERS] = {0};
+int timerCounter[MAX_TIMERS] = {0};
 int counter = 1000;
 
 //*************** Start implementation of Priority Queue ***************
@@ -76,31 +77,25 @@ void dequeue(priorityQueue *pq) {
 	heapifyDown(pq, 0);
 }
 
-static priorityQueue *tmpQueue = NULL;
-//static int tmpInit = 0;
-
-
 void addTimer(priorityQueue *pq, int timer, int priority) {
-//	if (!tmpInit) {
-//		initQueue(tmpQueue);
-//		tmpInit = 1;
-//	}
-	if (tmpQueue == NULL) {
-	    tmpQueue = malloc(sizeof(priorityQueue));  // Khởi tạo tmpQueue
-	    initQueue(tmpQueue);
+	static priorityQueue tmpQueue;
+	static int tmpInit = 0;
+
+	if (!tmpInit) {
+		initQueue(&tmpQueue);
+		tmpInit = 1;
 	}
 
 	if (priority > counter) {
-		enqueue(tmpQueue, timer, priority);
+		enqueue(&tmpQueue, timer, priority);
 	} else {
 		enqueue(pq, timer, priority);
 	}
 
-	if (pq->size == 0 && tmpQueue->size > 0) {
-		*pq = *tmpQueue;
-		free(tmpQueue);
-		tmpQueue = NULL;
-//		tmpInit = 0;
+	if (pq->size == 0 && tmpQueue.size > 0) {
+		*pq = tmpQueue;
+		initQueue(&tmpQueue);
+		tmpInit = 0;
 	}
 }
 //*************** End implementation of Priority Queue ***************
@@ -109,22 +104,51 @@ void initTimer(){
     initQueue(&pq);
 }
 int isTimerFlagOn(int index){
-	return (flag[index] == 1) ? 1 : 0;
+	return (flag[index-1] == 1) ? 1 : 0;
 }
-void setTimer(int index, int duration){
-    if (index >= 0 && index < MAX_TIMERS) {
-        flag[index] = 0;
-        int priority = counter - duration;
-        if (priority < 0) priority += 1000;
-        addTimer(&pq, index, priority);
-    }
+//void setTimer(int index, int duration){
+//    if (index-1 >= 0 && index-1 < MAX_TIMERS) {
+//        flag[index-1] = 0;
+//        int priority = counter - duration;
+//        if (priority < 0) priority += 1000;
+//        addTimer(&pq, index-1, priority);
+//    }
+//}
+//void timerRun(){
+//	if (pq.data[0].priority == counter){
+//		flag[pq.data[0].timer] = 1;
+//		dequeue(&pq);
+//	}
+//	counter--;
+//	if (counter < 0) counter = 1000;
+//}
+void setTimer(int timer, int duration){
+	flag[timer-1] = 0;
+	timerCounter[timer-1] = duration;
 }
 void timerRun(){
-	if (pq.data[0].priority == counter){
-		flag[pq.data[0].timer] = 1;
-		dequeue(&pq);
+	if (timerCounter[0] > 0){
+		timerCounter[0]--;
+		if (timerCounter[0] <= 0){
+			flag[0] = 1;
+		}
 	}
-	counter--;
-	if (counter < 0) counter = 1000;
+	if (timerCounter[1] > 0){
+		timerCounter[1]--;
+		if (timerCounter[1] <= 0){
+			flag[1] = 1;
+		}
+	}
+	if (timerCounter[2] > 0){
+		timerCounter[2]--;
+		if (timerCounter[2] <= 0){
+			flag[2] = 1;
+		}
+	}
+	if (timerCounter[3] > 0){
+		timerCounter[3]--;
+		if (timerCounter[3] <= 0){
+			flag[3] = 1;
+		}
+	}
 }
-
