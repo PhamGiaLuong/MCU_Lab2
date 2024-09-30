@@ -175,6 +175,7 @@ HAL_TIM_Base_Start_IT(&htim2);
 initTimer();
 setTimer(1, 75);
 setTimer(2, 40);
+setTimer(3, 1000);
   while (1)
   {
 	  if (isTimerFlagOn(1) == 1){
@@ -198,6 +199,10 @@ setTimer(2, 40);
 		  updateClockBuffer();
 
 		  update7SEG(index_led++);
+	  }
+	  if (isTimerFlagOn(3) == 1){
+		  setTimer(3, 2000);
+		  HAL_GPIO_TogglePin(GPIOA, LED_RED_Pin);
 	  }
 
 
