@@ -176,6 +176,7 @@ initTimer();
 setTimer(1, 75);
 setTimer(2, 40);
 setTimer(3, 1000);
+setTimer(4, 100);
   while (1)
   {
 	  if (isTimerFlagOn(1) == 1){
@@ -184,6 +185,10 @@ setTimer(3, 1000);
 	  }
 	  if (isTimerFlagOn(2) == 1){
 		  setTimer(2, 25);
+		  update7SEG(index_led++);
+	  }
+	  if (isTimerFlagOn(4) == 1){
+		  setTimer(4, 100);
 		  second++;
 		  if (second >= 60){
 			  second = 0;
@@ -198,7 +203,6 @@ setTimer(3, 1000);
 		  }
 		  updateClockBuffer();
 
-		  update7SEG(index_led++);
 	  }
 	  if (isTimerFlagOn(3) == 1){
 		  setTimer(3, 2000);
