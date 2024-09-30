@@ -1,3 +1,11 @@
-SystemTimer.c:15:6:setTimer1	16	static
-SystemTimer.c:20:6:setTimer2	16	static
-SystemTimer.c:25:6:timerRun	4	static
+SystemTimer.c:28:6:initQueue	16	static
+SystemTimer.c:32:6:swapElements	24	static
+SystemTimer.c:39:6:heapifyUp	24	static
+SystemTimer.c:47:6:heapifyDown	32	static
+SystemTimer.c:65:6:enqueue	24	static
+SystemTimer.c:74:6:dequeue	24	static
+SystemTimer.c:80:6:addTimer	24	static
+SystemTimer.c:103:6:initTimer	8	static
+SystemTimer.c:106:5:isTimerFlagOn	16	static
+SystemTimer.c:125:6:setTimer	16	static
+SystemTimer.c:129:6:timerRun	4	static
