@@ -18,11 +18,11 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include <softwareTimer.h>
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "SystemTimer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -156,41 +156,17 @@ HAL_TIM_Base_Start_IT(&htim2);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	setTimer1(100);
-	setTimer2(50);
-	int state = 1;
+	setTimer(1, 100);
+	setTimer(2, 50);
   while (1)
   {
-	  if (timer1Flag == 1){
-		  setTimer1(100);
+	  if (isTimerFlagOn(1) == 1){
+		  setTimer(1, 100);
 		  HAL_GPIO_TogglePin(GPIOA, DOT_Pin);
 	  }
-	  if (timer2Flag == 1){
-		  setTimer2(50);
+	  if (isTimerFlagOn(2) == 1){
+		  setTimer(2, 50);
 		  update7SEG(index_led++);
-//		  HAL_GPIO_WritePin(GPIOA, En1_Pin | En2_Pin | En3_Pin | En4_Pin, 1);
-//		  switch (state) {
-//			case 1:
-//				HAL_GPIO_WritePin(GPIOA, En1_Pin, 0);
-//				display7SEG(1);
-//				state = 2;
-//				break;
-//			case 2:
-//				HAL_GPIO_WritePin(GPIOA, En2_Pin, 0);
-//				display7SEG(2);
-//				state = 3;
-//				break;
-//			case 3:
-//				HAL_GPIO_WritePin(GPIOA, En3_Pin, 0);
-//				display7SEG(3);
-//				state = 4;
-//				break;
-//			default:
-//				HAL_GPIO_WritePin(GPIOA, En4_Pin, 0);
-//				display7SEG(0);
-//				state = 1;
-//				break;
-//		}
 	  }
 
     /* USER CODE END WHILE */
