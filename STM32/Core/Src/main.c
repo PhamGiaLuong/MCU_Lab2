@@ -18,11 +18,11 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include <softwareTimer.h>
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "SystemTimer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -156,16 +156,16 @@ HAL_TIM_Base_Start_IT(&htim2);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	setTimer1(100);
-	setTimer2(50);
+	setTimer(1, 100);
+	setTimer(2, 50);
   while (1)
   {
-	  if (timer1Flag == 1){
-		  setTimer1(100);
+	  if (isTimerFlagOn(1) == 1){
+		  setTimer(1, 100);
 		  HAL_GPIO_TogglePin(GPIOA, DOT_Pin);
 	  }
-	  if (timer2Flag == 1){
-		  setTimer2(25);
+	  if (isTimerFlagOn(2) == 1){
+		  setTimer(2, 25);
 		  update7SEG(index_led++);
 	  }
 
